@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:social_video/pages/HomePage.dart';
+import 'package:social_video/pages/ProfilPage.dart';
 
 class BottomBar extends StatelessWidget {
   const BottomBar({Key? key}) : super(key: key);
@@ -6,7 +8,7 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      shape: const CircularNotchedRectangle(),
+      // shape: const CircularNotchedRectangle(),
       child: Container(
         color: Colors.black,
         height: 75,
@@ -14,7 +16,15 @@ class BottomBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  // if()
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                  ),
+                );
+              },
               icon: const Icon(Icons.home_outlined, color: Colors.white),
             ),
             IconButton(
@@ -26,7 +36,14 @@ class BottomBar extends StatelessWidget {
               icon: const Icon(Icons.message_outlined, color: Colors.white),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProfilPage(),
+                  ),
+                );
+              },
               icon: const Icon(Icons.person_outline, color: Colors.white),
             ),
           ],

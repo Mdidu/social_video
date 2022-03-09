@@ -101,10 +101,13 @@ class PostContent extends StatelessWidget {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(10),
-                          child: CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Colors.transparent,
-                            backgroundImage: AssetImage(imageUrl),
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: AssetImage(imageUrl),
+                            ),
                           ),
                         ),
                         Container(
@@ -121,7 +124,7 @@ class PostContent extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 25,
                     ),
                   ],
                 ),

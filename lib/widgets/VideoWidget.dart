@@ -18,16 +18,34 @@ class _VideoWidgetState extends State<VideoWidget> {
   @override
   void initState() {
     super.initState();
+
     _controller = VideoPlayerController.asset(videoUrl)
       ..initialize().then((_) {
         _controller.setLooping(true);
-        _controller.play();
         setState(() {});
+        _controller.play();
       });
   }
 
   @override
   Widget build(BuildContext context) {
-    return VideoPlayer(_controller);
+    return GestureDetector(
+      onTap: (() {
+        setState(() {
+          if (_controller.value.isPlaying) {
+            _controller.pause();
+          } else {
+            _controller.play();
+          }
+        });
+      }),
+      child: VideoPlayer(_controller),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

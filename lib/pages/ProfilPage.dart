@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:social_video/widgets/BottomBar.dart';
 
 class ProfilPage extends StatelessWidget {
   const ProfilPage({Key? key}) : super(key: key);
@@ -11,7 +10,6 @@ class ProfilPage extends StatelessWidget {
       body: Center(
         child: Text('test'),
       ),
-      bottomNavigationBar: BottomBar(),
     );
   }
 }

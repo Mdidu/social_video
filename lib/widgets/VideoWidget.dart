@@ -6,38 +6,40 @@ class VideoWidget extends StatefulWidget {
   final String videoUrl;
 
   @override
-  State<VideoWidget> createState() => _VideoWidgetState(this.videoUrl);
+  State<VideoWidget> createState() => _VideoWidgetState();
 }
 
 class _VideoWidgetState extends State<VideoWidget> {
-  final String videoUrl;
   late VideoPlayerController _controller;
+  late VoidCallback listener;
 
-  _VideoWidgetState(this.videoUrl);
+  _VideoWidgetState();
 
   @override
   void initState() {
     super.initState();
 
-    _controller = VideoPlayerController.asset(videoUrl)
+    listener = () {
+      setState(() {});
+    };
+    _controller = VideoPlayerController.asset(widget.videoUrl)
+      ..addListener(listener)
+      ..setVolume(1.0)
       ..initialize().then((_) {
-        _controller.setLooping(true);
         setState(() {});
-        _controller.play();
-      });
+      })
+      ..play();
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (() {
-        setState(() {
-          if (_controller.value.isPlaying) {
-            _controller.pause();
-          } else {
-            _controller.play();
-          }
-        });
+        if (_controller.value.isPlaying) {
+          _controller.pause();
+        } else {
+          _controller.play();
+        }
       }),
       child: VideoPlayer(_controller),
     );
@@ -45,6 +47,7 @@ class _VideoWidgetState extends State<VideoWidget> {
 
   @override
   void dispose() {
+    _controller.removeListener(listener);
     _controller.dispose();
     super.dispose();
   }

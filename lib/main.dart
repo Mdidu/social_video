@@ -5,5 +5,5 @@ import 'package:social_video/pages/HomePage.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const HomePage());
+  runApp(HomePage());
 }

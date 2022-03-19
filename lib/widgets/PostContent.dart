@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_video/pages/ProfilPage.dart';
 import 'package:social_video/widgets/ContentItemValueCounted.dart';
 
 class PostContent extends StatelessWidget {
@@ -102,7 +103,17 @@ class PostContent extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(10),
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProfilPage(
+                                    navigatorAction: true,
+                                    username: author,
+                                  ),
+                                ),
+                              );
+                            },
                             child: CircleAvatar(
                               radius: 25,
                               backgroundColor: Colors.transparent,

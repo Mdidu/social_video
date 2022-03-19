@@ -9,7 +9,7 @@ class HomePage extends StatefulWidget {
     const Center(child: Text('test')),
     const Center(child: Text('test2')),
     const Center(child: Text('test3')),
-    const ProfilPage(),
+    ProfilPage(),
   ];
 
   @override

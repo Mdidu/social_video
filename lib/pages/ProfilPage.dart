@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_video/widgets/VideoWidget.dart';
+
+FirebaseAuth auth = FirebaseAuth.instance;
 
 class ProfilPage extends StatelessWidget {
   ProfilPage({Key? key, this.navigatorAction = false, this.username = 'Mdidu'})
@@ -84,10 +87,24 @@ class ProfilPage extends StatelessWidget {
                     ],
                   )
                 : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Text('Profile'),
+                    children: [
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      const Text('Profile'),
+                      SizedBox(
+                        child: IconButton(
+                          onPressed: () {
+                            logout();
+                          },
+                          icon: const Icon(
+                            Icons.person_off_outlined,
+                            color: Colors.black,
+                          ),
+                        ),
+                      )
                     ],
                   ),
             const SizedBox(
@@ -176,5 +193,9 @@ class ProfilPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> logout() async {
+    await auth.signOut();
   }
 }

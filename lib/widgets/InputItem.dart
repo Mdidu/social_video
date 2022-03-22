@@ -31,16 +31,8 @@ class InputItem extends StatelessWidget {
             controller: controllerField,
             textAlign: TextAlign.center,
             obscureText: obscureText,
-            // style: GoogleFonts.comfortaa(
-            //   fontSize: 20,
-            //   color: Colors.white,
-            //   fontWeight: FontWeight.bold,
-            // ),
             decoration: InputDecoration(
               hintText: hintText,
-              // hintStyle: GoogleFonts.comfortaa(
-              //   color: Colors.white,
-              // ),
               border: InputBorder.none,
             ),
           ),

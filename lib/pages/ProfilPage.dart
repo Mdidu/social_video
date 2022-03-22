@@ -50,18 +50,15 @@ class ProfilPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double widthScreen = MediaQuery.of(context).size.width;
-    // String? username = username;
     String? nbAbonnement = user["nbAbonnement"];
     String? nbAbonne = user["nbAbonne"];
 
     tiktokItems.retainWhere((element) => element['author'] == username);
 
     return Scaffold(
-      // height: 400,
       body: Container(
         padding: const EdgeInsets.fromLTRB(0, 55, 0, 0),
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             navigatorAction

@@ -1,48 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:social_video/pages/ProfilPage.dart';
-import 'package:social_video/widgets/ContentItemValueCounted.dart';
+import 'package:social_video/widgets/CommentaryIcon.dart';
+import 'package:social_video/widgets/LikeIcon.dart';
 
 class PostContent extends StatelessWidget {
-  const PostContent(
+  List<dynamic>? like;
+  List<dynamic>? comment;
+
+  PostContent(
       {Key? key,
+      required this.videoId,
       required this.imageUrl,
       required this.author,
       required this.description,
-      required this.nbLike,
-      required this.nbComment})
+      this.like,
+      this.comment})
       : super(key: key);
+  final String videoId;
   final String imageUrl;
   final String author;
   final String description;
-  final int nbLike;
-  final int nbComment;
 
   @override
   Widget build(BuildContext context) {
+    if (imageUrl == '') return const SizedBox();
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.only(top: 40),
-          height: 100,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                'Following',
-                style: TextStyle(
-                    color: Colors.white54, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(width: 20),
-              Text(
-                'For you',
-                style: TextStyle(
-                  color: Colors.white54,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
         Expanded(
           child: Row(
             children: [
@@ -78,24 +61,13 @@ class PostContent extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.share_outlined,
-                        size: 36.0,
-                        color: Colors.white,
-                      ),
+                    CommentaryIcon(
+                      videoId: videoId,
+                      commentaryArray: comment,
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ContentItemValueCounted(
-                      nbValue: nbComment,
-                      icon: Icons.message_outlined,
-                    ),
-                    ContentItemValueCounted(
-                      nbValue: nbLike,
-                      icon: Icons.favorite,
+                    LikeIcon(
+                      videoId: videoId,
+                      likeArray: like,
                     ),
                     Stack(
                       alignment: Alignment.bottomCenter,
@@ -108,9 +80,9 @@ class PostContent extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ProfilPage(
-                                    navigatorAction: true,
-                                    username: author,
-                                  ),
+                                      navigatorAction: true,
+                                      username: author,
+                                      imageUrl: imageUrl),
                                 ),
                               );
                             },

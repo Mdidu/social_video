@@ -5,12 +5,17 @@ import 'package:social_video/widgets/VideoWidget.dart';
 FirebaseAuth auth = FirebaseAuth.instance;
 
 class ProfilPage extends StatelessWidget {
-  ProfilPage({Key? key, this.navigatorAction = false, this.username = 'Mdidu'})
+  ProfilPage(
+      {Key? key,
+      this.navigatorAction = false,
+      required this.username,
+      required this.imageUrl})
       : super(key: key);
 
   final bool navigatorAction;
   final String username;
-  Map<String, String> user = {'nbAbonnement': '25', 'nbAbonne': '9'};
+  final String imageUrl;
+  Map<String, String> user = {'subscription': '25', 'subscriber': '9'};
 
   List<Map> tiktokItems = [
     {
@@ -50,8 +55,8 @@ class ProfilPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double widthScreen = MediaQuery.of(context).size.width;
-    String? nbAbonnement = user["nbAbonnement"];
-    String? nbAbonne = user["nbAbonne"];
+    String? subscription = user["subscription"];
+    String? subscriber = user["subscriber"];
 
     tiktokItems.retainWhere((element) => element['author'] == username);
 
@@ -110,10 +115,10 @@ class ProfilPage extends StatelessWidget {
             SizedBox(
               child: GestureDetector(
                 onTap: () {},
-                child: const CircleAvatar(
+                child: CircleAvatar(
                   radius: 36,
                   backgroundColor: Colors.transparent,
-                  backgroundImage: AssetImage('assets/images/nature.jpg'),
+                  backgroundImage: AssetImage(imageUrl),
                 ),
               ),
             ),
@@ -131,7 +136,7 @@ class ProfilPage extends StatelessWidget {
                 children: [
                   Column(
                     children: [
-                      Text(nbAbonnement!),
+                      Text(subscription!),
                       const Text('Abonnements'),
                     ],
                   ),
@@ -143,7 +148,7 @@ class ProfilPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(nbAbonne!),
+                      Text(subscriber!),
                       const Text('Abonnés'),
                     ],
                   ),

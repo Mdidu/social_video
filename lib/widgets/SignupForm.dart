@@ -70,6 +70,9 @@ class SignupForm extends StatelessWidget {
         .doc(userId)
         .set({
           'username': username,
+          'subscriber': 0,
+          'subscription': 0,
+          'photoProfile': ''
         })
         .then((value) => print('Utilisateur ajouté'))
         .catchError((error) => print('Error : $error'));

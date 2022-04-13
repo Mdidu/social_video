@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
     imageUrl = documentSnapshot['photoProfile'];
 
     widget.pages.add(
-      ProfilPage(username: username, imageUrl: imageUrl),
+      ProfilPage(userId: widget.userId, username: username, imageUrl: imageUrl),
     );
   }
 

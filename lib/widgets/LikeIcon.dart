@@ -37,7 +37,7 @@ class _LikeIconState extends State<LikeIcon> {
         firestore.collection('Video').doc(widget.videoId);
 
     DocumentSnapshot documentSnapshot = await docRef.get();
-    
+
     likeArray = documentSnapshot['like'];
   }
 
@@ -58,28 +58,7 @@ class _LikeIconState extends State<LikeIcon> {
       children: [
         IconButton(
           onPressed: () {
-            print(isAlreadyLike);
-            if (!isAlreadyLike) {
-              firestore.collection('Video').doc(widget.videoId).update({
-                'like': FieldValue.arrayUnion([widget.userId])
-              }).then((value) {
-                setState(() {
-                  likeArray!.add(widget.userId);
-                  isAlreadyLike = true;
-                  colorIcon = Colors.red;
-                });
-              });
-            } else {
-              firestore.collection('Video').doc(widget.videoId).update({
-                'like': FieldValue.arrayRemove([widget.userId])
-              }).then((value) {
-                setState(() {
-                  likeArray!.remove(widget.userId);
-                  isAlreadyLike = false;
-                  colorIcon = Colors.white;
-                });
-              });
-            }
+            addLike();
           },
           icon: Icon(
             Icons.favorite,
@@ -95,5 +74,27 @@ class _LikeIconState extends State<LikeIcon> {
     );
   }
 
-  addLike() async {}
+  addLike() {
+    if (!isAlreadyLike) {
+      firestore.collection('Video').doc(widget.videoId).update({
+        'like': FieldValue.arrayUnion([widget.userId])
+      }).then((value) {
+        setState(() {
+          likeArray!.add(widget.userId);
+          isAlreadyLike = true;
+          colorIcon = Colors.red;
+        });
+      });
+    } else {
+      firestore.collection('Video').doc(widget.videoId).update({
+        'like': FieldValue.arrayRemove([widget.userId])
+      }).then((value) {
+        setState(() {
+          likeArray!.remove(widget.userId);
+          isAlreadyLike = false;
+          colorIcon = Colors.white;
+        });
+      });
+    }
+  }
 }

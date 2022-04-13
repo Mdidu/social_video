@@ -56,6 +56,7 @@ class VideoSlider extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => ProfilPage(
                           navigatorAction: true,
+                          userId: documentSnapshot['userId'],
                           username: documentSnapshot['author'],
                           imageUrl: documentSnapshot['photoProfile'],
                         ),
@@ -70,6 +71,7 @@ class VideoSlider extends StatelessWidget {
                     ),
                     PostContent(
                       videoId: documentSnapshot.id,
+                      userId: documentSnapshot['userId'],
                       imageUrl: documentSnapshot['photoProfile'],
                       author: documentSnapshot['author'],
                       description: documentSnapshot['description'],

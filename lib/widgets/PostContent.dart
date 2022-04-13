@@ -1,15 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_video/pages/ProfilPage.dart';
 import 'package:social_video/widgets/CommentaryIcon.dart';
 import 'package:social_video/widgets/LikeIcon.dart';
+import '../services/SubcriptionService.dart';
 
-class PostContent extends StatelessWidget {
+FirebaseAuth auth = FirebaseAuth.instance;
+FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+class PostContent extends StatefulWidget {
   List<dynamic>? like;
   List<dynamic>? comment;
 
   PostContent(
       {Key? key,
       required this.videoId,
+      required this.userId,
       required this.imageUrl,
       required this.author,
       required this.description,
@@ -17,13 +24,44 @@ class PostContent extends StatelessWidget {
       this.comment})
       : super(key: key);
   final String videoId;
+  final String userId;
+  final String currentUserId = auth.currentUser!.uid;
   final String imageUrl;
   final String author;
   final String description;
 
   @override
+  State<PostContent> createState() => _PostContentState();
+}
+
+class _PostContentState extends State<PostContent> {
+  late List<dynamic> subscriptionArray = [];
+  late bool alreadySubscribe = false;
+
+  getDataSubscriptionAccount() async {
+    DocumentReference<Map<String, dynamic>> docRef =
+        firestore.collection('Users').doc(widget.currentUserId);
+    DocumentSnapshot documentSnapshot = await docRef.get();
+
+    subscriptionArray = documentSnapshot['subscription'];
+
+    if (subscriptionArray.isNotEmpty &&
+        subscriptionArray.contains(widget.userId)) {
+      setState(() {
+        alreadySubscribe = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    getDataSubscriptionAccount();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (imageUrl == '') return const SizedBox();
+    if (widget.imageUrl == '') return const SizedBox();
     return Column(
       children: [
         Expanded(
@@ -37,7 +75,7 @@ class PostContent extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        author,
+                        widget.author,
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -45,7 +83,7 @@ class PostContent extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        description,
+                        widget.description,
                         style: const TextStyle(
                           color: Colors.white,
                         ),
@@ -62,12 +100,12 @@ class PostContent extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     CommentaryIcon(
-                      videoId: videoId,
-                      commentaryArray: comment,
+                      videoId: widget.videoId,
+                      commentaryArray: widget.comment,
                     ),
                     LikeIcon(
-                      videoId: videoId,
-                      likeArray: like,
+                      videoId: widget.videoId,
+                      likeArray: widget.like,
                     ),
                     Stack(
                       alignment: Alignment.bottomCenter,
@@ -81,29 +119,46 @@ class PostContent extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) => ProfilPage(
                                       navigatorAction: true,
-                                      username: author,
-                                      imageUrl: imageUrl),
+                                      userId: widget.userId,
+                                      username: widget.author,
+                                      imageUrl: widget.imageUrl),
                                 ),
                               );
                             },
                             child: CircleAvatar(
                               radius: 25,
                               backgroundColor: Colors.transparent,
-                              backgroundImage: AssetImage(imageUrl),
+                              backgroundImage: AssetImage(widget.imageUrl),
                             ),
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(20)),
-                          child: const Icon(
-                            Icons.add,
-                            size: 15.0,
-                            color: Colors.white,
-                          ),
-                        ),
+                        alreadySubscribe ||
+                                widget.currentUserId == widget.userId
+                            ? Container()
+                            : Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: GestureDetector(
+                                  child: const Icon(
+                                    Icons.add,
+                                    size: 15.0,
+                                    color: Colors.white,
+                                  ),
+                                  onTap: () {
+                                    SubscriptionService.subscribeToUserAccount(
+                                            widget.currentUserId, widget.userId)
+                                        .then((value) {
+                                      setState(() {
+                                        subscriptionArray
+                                            .add(widget.currentUserId);
+                                        alreadySubscribe = !alreadySubscribe;
+                                      });
+                                    });
+                                  },
+                                ),
+                              ),
                       ],
                     ),
                     const SizedBox(

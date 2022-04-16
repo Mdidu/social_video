@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.social_video">
-    <uses-permission android:name="android.permission.INTERNET"/>
+   <!-- Permission for accessing `camera` -->
+   <uses-permission android:name="android.permission.INTERNET"/>
+   <uses-permission android:name="android.permission.CAMERA"/>
    <application
         android:label="social_video"
         android:name="${applicationName}"

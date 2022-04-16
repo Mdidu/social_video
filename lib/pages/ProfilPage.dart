@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:social_video/pages/NewVideo.dart';
+import 'package:social_video/pages/CameraScreen.dart';
 import 'package:social_video/services/SubcriptionService.dart';
 import 'package:social_video/widgets/VideoWidget.dart';
 
@@ -23,7 +22,7 @@ class ProfilPage extends StatefulWidget {
   final String imageUrl;
   final String abonnementsTxt = "Abonnements";
   final String abonnesTxt = "Abonnés";
-  final String titleTxt = "Pofile";
+  final String titleTxt = "Profile";
   final String subscribeBtnTxt = "S'abonner";
   final String unsubscribeBtnTxt = "Se désabonner";
 

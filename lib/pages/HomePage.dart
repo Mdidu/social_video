@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:social_video/pages/NewVideo.dart';
+import 'package:social_video/pages/CameraScreen.dart';
 import 'package:social_video/pages/VideoSlider.dart';
 import 'package:social_video/pages/ProfilPage.dart';
 
@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
   List<dynamic> pages = [
     VideoSlider(),
     const Center(child: Text('test')),
-    const NewVideo(),
+    const CameraScreen(),
     const Center(child: Text('test3'))
   ];
 
@@ -56,10 +56,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-          // bottomAppBarColor: Colors.black,
-          // iconTheme: Icon()
-          ),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Container(

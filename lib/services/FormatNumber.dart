@@ -1,12 +1,4 @@
-import 'package:flutter/material.dart';
-
-class ContentItemValueCounted extends StatelessWidget {
-  const ContentItemValueCounted(
-      {Key? key, required this.nbValue, required this.icon})
-      : super(key: key);
-  final int nbValue;
-  final IconData icon;
-
+class FormatNumber {
   String displayNbValue(nb) {
     var arrayValue = nb.toString().split('');
 
@@ -38,9 +30,13 @@ class ContentItemValueCounted extends StatelessWidget {
     for (var i = 0; i < loopTurn; i++) {
       if (i == loopTurn - 1 && indicatorTotalValue == 'K') {
         valueMessage += '.' + arrayValue[i] + ' $indicatorTotalValue';
-      } else if (i == loopTurn - 4) {
+      } else if (i == loopTurn - 4 && indicatorTotalValue == 'K') {
+        valueMessage += arrayValue[i];
+      } else if (i == loopTurn - 4 && indicatorTotalValue == 'M') {
         valueMessage += '.' + arrayValue[i];
-      } else if (i == loopTurn - 3) {
+      } else if (i == loopTurn - 3 && indicatorTotalValue == 'K') {
+        valueMessage += arrayValue[i];
+      } else if (i == loopTurn - 3 && indicatorTotalValue == 'M') {
         valueMessage += arrayValue[i] + ' $indicatorTotalValue';
         break;
       } else {
@@ -48,25 +44,5 @@ class ContentItemValueCounted extends StatelessWidget {
       }
     }
     return valueMessage;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        IconButton(
-          onPressed: () {},
-          icon: Icon(
-            icon,
-            size: 36.0,
-            color: Colors.white,
-          ),
-        ),
-        Text(
-          displayNbValue(nbValue),
-          style: const TextStyle(color: Colors.white),
-        ),
-      ],
-    );
   }
 }

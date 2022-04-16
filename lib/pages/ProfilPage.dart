@@ -1,67 +1,104 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:social_video/pages/CameraScreen.dart';
+import 'package:social_video/services/SubcriptionService.dart';
 import 'package:social_video/widgets/VideoWidget.dart';
 
-class ProfilPage extends StatelessWidget {
-  ProfilPage({Key? key, this.navigatorAction = false, this.username = 'Mdidu'})
+FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+class ProfilPage extends StatefulWidget {
+  ProfilPage(
+      {Key? key,
+      this.navigatorAction = false,
+      required this.username,
+      required this.userId,
+      required this.imageUrl})
       : super(key: key);
 
   final bool navigatorAction;
+  final String userId;
+  final String currentUserId = auth.currentUser!.uid;
   final String username;
-  Map<String, String> user = {'nbAbonnement': '25', 'nbAbonne': '9'};
+  final String imageUrl;
+  final String abonnementsTxt = "Abonnements";
+  final String abonnesTxt = "Abonnés";
+  final String titleTxt = "Profile";
+  final String subscribeBtnTxt = "S'abonner";
+  final String unsubscribeBtnTxt = "Se désabonner";
 
-  List<Map> tiktokItems = [
-    {
-      "video": 'assets/videos/video_1.mp4',
-      "image": 'assets/images/nature.jpg',
-      'author': 'Mdidu',
-      'description': 'La première destruction de Beerus Sama était Zamasu !',
-      'nbLike': 256830500,
-      'nbComment': 128
-    },
-    {
-      "video": 'assets/videos/video_2.mp4',
-      "image": 'assets/images/nature.jpg',
-      'author': 'Reath',
-      'description': 'La première vidéo de Reath !',
-      'nbLike': 1256,
-      'nbComment': 128
-    },
-    {
-      "video": 'assets/videos/video_2.mp4',
-      "image": 'assets/images/nature.jpg',
-      'author': 'Reath',
-      'description': 'La première vidéo de Reath !',
-      'nbLike': 1256,
-      'nbComment': 128
-    },
-    {
-      "video": 'assets/videos/video_1.mp4',
-      "image": 'assets/images/nature.jpg',
-      'author': 'Mdidu',
-      'description': 'La première destruction de Beerus Sama était Zamasu !',
-      'nbLike': 256830500,
-      'nbComment': 128
-    },
-  ];
+  @override
+  State<ProfilPage> createState() => _ProfilPageState();
+}
+
+class _ProfilPageState extends State<ProfilPage> {
+  late List<dynamic> tiktokItems = [];
+  late List<dynamic> subscriberArray = [];
+  late List<dynamic> subscriptionArray = [];
+  late String description = '';
+  late bool alreadySubscribe = false;
+
+  Future<void> logout() async {
+    await auth.signOut();
+  }
+
+  Future<void> getInformalData() async {
+    DocumentReference<Map<String, dynamic>> docRef =
+        firestore.collection('Users').doc(widget.userId);
+    DocumentSnapshot documentSnapshot = await docRef.get();
+
+    subscriberArray = documentSnapshot['subscriber'];
+    subscriptionArray = documentSnapshot['subscription'];
+    description = documentSnapshot['description'];
+
+    if (subscriberArray.contains(currentUserId)) {
+      alreadySubscribe = true;
+    } else {
+      alreadySubscribe = false;
+    }
+
+    if (subscriberArray.isNotEmpty || subscriptionArray.isNotEmpty) {
+      setState(() {
+        subscriberArray = documentSnapshot['subscriber'];
+        subscriptionArray = documentSnapshot['subscription'];
+        description = documentSnapshot['description'];
+      });
+    }
+  }
+
+  getUserVideo() async {
+    Query<Map<String, dynamic>> docRef2 = firestore.collection('Video');
+
+    var documents = await docRef2.get();
+    List<dynamic> temporalArray = [];
+
+    for (var doc in documents.docs) {
+      if (doc.data()['author'] == widget.username) {
+        temporalArray.add(doc.data());
+        setState(() {
+          tiktokItems = temporalArray;
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    getInformalData();
+    getUserVideo();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     double widthScreen = MediaQuery.of(context).size.width;
-    // String? username = username;
-    String? nbAbonnement = user["nbAbonnement"];
-    String? nbAbonne = user["nbAbonne"];
-
-    tiktokItems.retainWhere((element) => element['author'] == username);
 
     return Scaffold(
-      // height: 400,
       body: Container(
         padding: const EdgeInsets.fromLTRB(0, 55, 0, 0),
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            navigatorAction
+            widget.navigatorAction
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,17 +114,31 @@ class ProfilPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Text('Profile'),
+                      Text(widget.titleTxt),
                       const SizedBox(
                         width: 50,
                       )
                     ],
                   )
                 : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Text('Profile'),
+                    children: [
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      Text(widget.titleTxt),
+                      SizedBox(
+                        child: IconButton(
+                          onPressed: () {
+                            logout();
+                          },
+                          icon: const Icon(
+                            Icons.person_off_outlined,
+                            color: Colors.black,
+                          ),
+                        ),
+                      )
                     ],
                   ),
             const SizedBox(
@@ -96,17 +147,17 @@ class ProfilPage extends StatelessWidget {
             SizedBox(
               child: GestureDetector(
                 onTap: () {},
-                child: const CircleAvatar(
+                child: CircleAvatar(
                   radius: 36,
                   backgroundColor: Colors.transparent,
-                  backgroundImage: AssetImage('assets/images/nature.jpg'),
+                  backgroundImage: AssetImage(widget.imageUrl),
                 ),
               ),
             ),
             const SizedBox(
               height: 15,
             ),
-            Text(username),
+            Text(widget.username),
             const SizedBox(
               height: 15,
             ),
@@ -117,8 +168,8 @@ class ProfilPage extends StatelessWidget {
                 children: [
                   Column(
                     children: [
-                      Text(nbAbonnement!),
-                      const Text('Abonnements'),
+                      Text(subscriptionArray.length.toString()),
+                      Text(widget.abonnementsTxt),
                     ],
                   ),
                   const SizedBox(
@@ -129,8 +180,8 @@ class ProfilPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(nbAbonne!),
-                      const Text('Abonnés'),
+                      Text(subscriberArray.length.toString()),
+                      Text(widget.abonnesTxt),
                     ],
                   ),
                 ],
@@ -139,17 +190,43 @@ class ProfilPage extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text("S'abonner"),
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.greenAccent.shade400),
-            ),
+            currentUserId != widget.userId
+                ? alreadySubscribe
+                    ? ElevatedButton(
+                        onPressed: () {
+                          SubscriptionService.unsubscribeToUserAccount(
+                                  currentUserId, widget.userId)
+                              .then((value) {
+                            setState(() {
+                              subscriberArray.remove(currentUserId);
+                              alreadySubscribe = !alreadySubscribe;
+                            });
+                          });
+                        },
+                        child: Text(widget.unsubscribeBtnTxt),
+                        style: ElevatedButton.styleFrom(
+                            primary: const Color.fromARGB(255, 48, 16, 163)),
+                      )
+                    : ElevatedButton(
+                        onPressed: () {
+                          SubscriptionService.subscribeToUserAccount(
+                                  currentUserId, widget.userId)
+                              .then((value) {
+                            setState(() {
+                              subscriberArray.add(currentUserId);
+                              alreadySubscribe = !alreadySubscribe;
+                            });
+                          });
+                        },
+                        child: Text(widget.subscribeBtnTxt),
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.greenAccent.shade400),
+                      )
+                : Container(),
             const SizedBox(
               height: 15,
             ),
-            const Text(
-                'Description très hyper archi méga giga longue ou pas !'),
+            Text(description),
             const SizedBox(
               height: 25,
               child: Divider(
@@ -165,8 +242,8 @@ class ProfilPage extends StatelessWidget {
                 itemCount: tiktokItems.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
-                    child: username == tiktokItems[index]['author']
-                        ? VideoWidget(videoUrl: tiktokItems[index]['video'])
+                    child: widget.username == tiktokItems[index]['author']
+                        ? VideoWidget(videoUrl: tiktokItems[index]['url'])
                         : Container(),
                   );
                 },

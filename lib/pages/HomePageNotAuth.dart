@@ -14,8 +14,6 @@ class HomePageNotAuth extends StatelessWidget {
       home: Builder(builder: (context) {
         return Scaffold(
           body: SizedBox(
-            // width: double.infinity - 40,
-            // width: MediaQuery.of(context).size.width,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

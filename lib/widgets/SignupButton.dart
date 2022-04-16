@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:social_video/pages/LoginPage.dart';
 
 class SignupButton extends StatelessWidget {
   const SignupButton({Key? key, required this.onPressedFunction})
